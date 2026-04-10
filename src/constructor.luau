@@ -5,7 +5,7 @@
 	* @date		: April 09 2026
 	* @lastEdit	: April 10 2026 16:17
 	* @brief	: Animation controller for any model / character.
-	* @version	: 0.2.5
+	* @version	: 0.2.6
 	******************************************************************************
 	* @attention
 	*
@@ -332,7 +332,7 @@ function animationController:setWeight(name: animName, weight: number, fadeTime:
 	local track = self._tracks[name]
 
 	if track then
-		track:AjustWeight(weight, fadeTime or DEFAULT_CONFIG.fadeIn)
+		track:AdjustWeight(weight, fadeTime or DEFAULT_CONFIG.fadeIn)
 	end
 end
 
