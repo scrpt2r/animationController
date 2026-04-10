@@ -1,306 +1,511 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
-<meta charset="UTF-8">
-<title>AnimationController Documentation</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #0d1117;
-        color: #c9d1d9;
-        line-height: 1.6;
-        padding: 40px;
-    }
-    h1, h2, h3 {
-        color: #58a6ff;
-    }
-    code {
-        background: #161b22;
-        padding: 4px 6px;
-        border-radius: 6px;
-        font-size: 14px;
-    }
-    pre {
-        background: #161b22;
-        padding: 15px;
-        border-radius: 10px;
-        overflow-x: auto;
-    }
-    .box {
-        background: #161b22;
-        padding: 15px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-    }
-</style>
-</head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnimationController — Kullanım Rehberi</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/lua.min.js"></script>
+    <script>hljs.highlightAll();</script>
 
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --container-bg: #161b22;
+            --border-color: #30363d;
+            --text-main: #c9d1d9;
+            --text-muted: #8b949e;
+            --accent: #58a6ff;
+            --accent-hover: #79c0ff;
+            --code-font: 'Fira Code', monospace;
+            --main-font: 'Inter', sans-serif;
+        }
+
+        body {
+            font-family: var(--main-font);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: var(--accent);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: #ffffff;
+            margin-top: 50px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2 span {
+            color: var(--accent);
+            font-family: var(--code-font);
+            font-size: 1.2rem;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        /* Tree View Styling */
+        .tree-view {
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            font-family: var(--code-font);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+            white-space: pre;
+            overflow-x: auto;
+            margin-bottom: 30px;
+        }
+
+        .tree-view .highlight { color: #7ee787; }
+        .tree-view .comment { color: #8b949e; font-style: italic; }
+
+        /* Code Block Styling */
+        pre {
+            margin: 0;
+        }
+
+        .code-wrapper {
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .code-header {
+            background-color: #010409;
+            padding: 8px 15px;
+            border-bottom: 1px solid var(--border-color);
+            font-family: var(--code-font);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        code {
+            font-family: var(--code-font);
+            font-size: 0.95rem;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: var(--container-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: #010409;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        td:first-child {
+            font-family: var(--code-font);
+            color: #d2a8ff;
+            font-size: 0.9rem;
+        }
+
+        td:last-child {
+            color: var(--text-muted);
+        }
+
+        .category-row {
+            background-color: #21262d;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Callouts */
+        .callout {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            background-color: rgba(248, 81, 73, 0.1);
+            border-left: 4px solid #f85149;
+            color: #ff7b72;
+        }
+
+        .callout.success {
+            background-color: rgba(46, 160, 67, 0.1);
+            border-left-color: #2ea043;
+            color: #3fb950;
+        }
+    </style>
+</head>
 <body>
 
-<h1>🚀 AnimationController</h1>
-<p>A lightweight and flexible animation system for Roblox models and viewmodels.</p>
+<div class="container">
+    <h1>AnimationController — Kullanım Rehberi</h1>
+    
+    <p><code>replicated/libs/animationHandler/animationController.luau</code> konumu için modül kullanım dokümantasyonu.</p>
 
-<hr>
+    <div class="tree-view">
+<span class="highlight">AK47_Viewmodel</span> (Model)
+  ├─ Humanoid
+  ├─ HumanoidRootPart
+  ├─ ... <span class="comment">(silah mesh parçaları)</span>
+  └─ <span class="highlight">Animations</span> (Folder)
+        ├─ Idle          <span class="comment">(Animation — Looped: true)</span>
+        ├─ Equip         <span class="comment">(Animation — Looped: false)</span>
+        ├─ Unequip       <span class="comment">(Animation — Looped: false)</span>
+        ├─ Fire          <span class="comment">(Animation — Looped: false)</span>
+        ├─ FireEmpty     <span class="comment">(Animation — Looped: false)  ← şarjör boşken</span>
+        ├─ Reload        <span class="comment">(Animation — Looped: false)</span>
+        ├─ ReloadEmpty   <span class="comment">(Animation — Looped: false)  ← komple boşken</span>
+        ├─ Run           <span class="comment">(Animation — Looped: true)</span>
+        ├─ Walk          <span class="comment">(Animation — Looped: true)</span>
+        └─ Inspect       <span class="comment">(Animation — Looped: false)</span></div>
 
-<h2>📦 Setup</h2>
+    <div class="code-wrapper">
+        <div class="code-header"><span>Modülü Dahil Etme</span><span>Luau</span></div>
+<pre><code class="language-lua">local AnimationController = require(
+    game.ReplicatedStorage.replicated.libs.animationHandler.animationController
+)</code></pre>
+    </div>
 
-<h3>1. Install Module</h3>
-<pre>
-ReplicatedStorage
-└── replicated
-    └── libs
-        └── animationHandler
-            └── animationController.luau
-</pre>
-
-<h3>2. Model Requirements</h3>
-<pre>
-Viewmodel (Model)
-├─ Humanoid
-├─ HumanoidRootPart
-└─ Animations (Folder)
-    ├─ Idle
-    ├─ Equip
-    ├─ Fire
-    ├─ Reload
-</pre>
-
-<div class="box">
-<strong>Important:</strong>
-<ul>
-<li>Animations must be <code>Animation</code> instances</li>
-<li>Each animation must have a valid <code>AnimationId</code></li>
-<li>Animator is created automatically</li>
-</ul>
-</div>
-
-<hr>
-
-<h2>🧠 How It Works</h2>
-<ul>
-<li>Animations are loaded from the <code>Animations</code> folder</li>
-<li>Each animation is cached as an <code>AnimationTrack</code></li>
-<li>Handles current and previous animations</li>
-<li>Supports queue system</li>
-<li>Supports locking system to prevent conflicts</li>
-</ul>
-
-<hr>
-
-<h2>📦 Usage</h2>
-
-<h3>1. Create Controller</h3>
-<pre>
-local AnimationController = require(path.to.animationController)
-
-local anim = AnimationController.new(model)
+    <h2><span>1.</span> Oluşturma</h2>
+    <p>Viewmodel yüklendiğinde bir kez oluşturulmalıdır. Humanoid yoksa <code>nil</code> dönebilir, bu yüzden mutlaka kontrol edilmelidir.</p>
+    <div class="code-wrapper">
+<pre><code class="language-lua">local viewmodelModel: Model = workspace.Camera:FindFirstChild("AK47_Viewmodel") :: Model
+local anim = AnimationController.new(viewmodelModel)
 
 if not anim then
-    error("Failed to create AnimationController")
-end
-</pre>
+    error("AnimationController oluşturulamadı")
+end</code></pre>
+    </div>
 
-<h3>2. Play Loop Animations</h3>
-<pre>
-anim:play("Idle")
+    <h2><span>2.</span> Temel Oynatma</h2>
+    <p><code>:play()</code> metodu looped (tekrarlanan) animasyonlar (Idle, Walk, Run) için idealdir. Eğer animasyon zaten oynuyorsa tekrar baştan başlatmaz.</p>
+    <div class="code-wrapper">
+<pre><code class="language-lua">anim:play("Idle")
 anim:play("Walk")
-</pre>
+anim:play("Run")
 
-<h3>Custom Config</h3>
-<pre>
+-- Özel config ile detaylı kullanım:
 anim:play("Idle", {
-    fadeIn = 0.2,
-    fadeOut = 0.1,
-    speed = 1,
-    looped = true,
-    priority = "Idle"
-})
-</pre>
+    fadeIn   = 0.3,   -- geçiş süresi (saniye)
+    fadeOut  = 0.2,
+    speed    = 1.0,
+    looped   = true,
+    priority = "Idle",
+})</code></pre>
+    </div>
 
-<h3>3. Play Once (One-shot)</h3>
-<pre>
+    <h2><span>3.</span> Tek Seferlik OYNATMA</h2>
+    <p><code>:playOnce()</code> metodu bir kez oynar ve bittikten sonra belirlediğiniz callback fonksiyonunu çağırır. Fire, Equip, Inspect gibi one-shot animasyonlar için kullanılır.</p>
+    <div class="code-wrapper">
+<pre><code class="language-lua">-- Basit kullanım
 anim:playOnce("Fire")
-</pre>
 
-<pre>
-anim:playOnce("Reload", nil, function()
+-- Callback ile — animasyon bittikten sonra Idle'a dön
+anim:playOnce("Equip", nil, function()
     anim:play("Idle")
 end)
-</pre>
 
-<h3>4. Locked Play</h3>
-<pre>
+-- Özel hız ayarı ve Callback
+anim:playOnce("Reload", { speed = 1.2 }, function()
+    print("Reload bitti, Idle başlıyor")
+    anim:play("Idle")
+end)</code></pre>
+    </div>
+
+    <h2><span>4.</span> Kilitli Oynatma</h2>
+    <p><code>:playLocked()</code> metodu kullanıldığında, mevcut animasyon bitmeden başka bir animasyon başlatılamaz. Gelen istekler kuyruğa (queue) alınır.</p>
+    <div class="code-wrapper">
+<pre><code class="language-lua">-- Reload kilitli oynat
 anim:playLocked("Reload", nil, function()
+    print("Reload tamamlandı, kilit açıldı")
     anim:play("Idle")
 end)
-</pre>
 
-<p>Prevents other animations from interrupting.</p>
+-- Kilit açılana kadar gelen Fire isteği queue'ya girer
+-- Reload bittikten SONRA otomatik oynar
+anim:queue("Fire")</code></pre>
+    </div>
 
-<h3>5. Queue System</h3>
-<pre>
-anim:queue("Equip")
-anim:queue("Idle")
-</pre>
+    <h2><span>5.</span> Kuyruk Sistemi (Queue)</h2>
+    <p><code>:queue()</code> metodu animasyonları sıraya sokar ve peş peşe (zincirleme) oynatılmalarını sağlar.</p>
+    <div class="code-wrapper">
+<pre><code class="language-lua">-- Equip -> Idle zinciri
+anim:queue("Equip", nil, function()
+    print("Equip bitti")
+end)
+anim:queue("Idle")   -- Equip bittikten sonra otomatik başlar</code></pre>
+    </div>
 
-<hr>
+    <h2><span>6.</span> Durdurma</h2>
+    <div class="code-wrapper">
+<pre><code class="language-lua">-- Belirli animasyonu durdur
+anim:stop("Fire")
+anim:stop("Reload", 0.3)   -- 0.3 saniye fade (yumuşak geçiş) ile durdur
 
-<h2>🛑 Stopping</h2>
-
-<pre>
-anim:stop("Reload")
+-- Şu anki oynayan animasyonu durdur
 anim:stop()
-anim:stopAll()
-</pre>
 
-<hr>
+-- Hepsini durdur (Kuyruğu temizler ve kilidi açar)
+anim:stopAll()</code></pre>
+    </div>
 
-<h2>⚙️ Adjustments</h2>
-
-<pre>
+    <h2><span>7.</span> Hız ve Ağırlık Ayarları</h2>
+    <div class="code-wrapper">
+<pre><code class="language-lua">-- Reload animasyonunu 1.5x hızında oynat
 anim:setSpeed("Reload", 1.5)
+
+-- Birden fazla animasyon blend'i için ağırlık ayarla (0.0 - 1.0 arası)
 anim:setWeight("Walk", 0.5)
-</pre>
+anim:setWeight("Run",  1.0)</code></pre>
+    </div>
 
-<hr>
+    <h2><span>8.</span> Getter'lar (Sorgulama)</h2>
+    <div class="code-wrapper">
+<pre><code class="language-lua">-- Şu an hangi animasyon oynuyor?
+local current = anim:getCurrent()
+print("Şu an:", current)   -- "Idle"
 
-<h2>🔍 Get Info</h2>
+-- Bir önceki animasyon
+local prev = anim:getPrevious()
+print("Önceki:", prev)
 
-<pre>
-anim:getCurrent()
-anim:getPrevious()
-anim:isPlaying("Reload")
-anim:getProgress("Reload")
-anim:getTrack("Reload")
-</pre>
-
-<hr>
-
-<h2>🎯 Example Use Cases</h2>
-
-<h3>Fire</h3>
-<pre>
-if not anim:isPlaying("Reload") then
-    anim:playOnce("Fire")
+-- Belirli bir animasyon oynuyor mu?
+if anim:isPlaying("Reload") then
+    print("Reload devam ediyor, ateş etme!")
 end
-</pre>
 
-<h3>Reload</h3>
-<pre>
-anim:playLocked("Reload", nil, function()
-    anim:play("Idle")
-end)
-</pre>
+-- Animasyon ilerleme durumu? (0 = başlangıç, 1 = son)
+local progress = anim:getProgress("Reload")
+print(string.format("Reload: %%%.0f", progress * 100))  -- Örn: "Reload: %45"
 
-<h3>Movement</h3>
-<pre>
-if speed > 10 then
-    anim:play("Run")
-elseif speed > 1 then
-    anim:play("Walk")
-else
-    anim:play("Idle")
+-- Track objesini doğrudan al (Event bağlamak için)
+local reloadTrack = anim:getTrack("Reload")
+if reloadTrack then
+    -- İstediğin saniyeye atla
+    reloadTrack.TimePosition = 0.5
+
+    -- Belirli bir Keyframe Marker'a gelince tetiklenen event
+    reloadTrack:GetMarkerReachedSignal("BulletInserted"):Connect(function()
+        print("Mermi yerleşti!")
+        -- Not: Roblox Animation Editor'da keyframe'e sağ tık -> Add Marker
+    end)
+end</code></pre>
+    </div>
+
+    <h2><span>9.</span> Gerçek Kullanım Senaryoları</h2>
+    <div class="code-wrapper">
+        <div class="code-header"><span>Silah Mekanikleri Örneği</span><span>Luau</span></div>
+<pre><code class="language-lua">-- ── Silah equip edildi ──
+local function onEquip()
+    anim:stopAll()
+    anim:playOnce("Equip", { speed = 1.2 }, function()
+        anim:play("Idle")
+    end)
 end
-</pre>
 
-<h3>Inspect</h3>
-<pre>
-anim:playOnce("Inspect", nil, function()
-    anim:play("Idle")
-end)
-</pre>
+-- ── Ateş ──
+local lastFireAnim = 0
+local FIRE_ANIM_COOLDOWN = 0.1   -- çok sık çağrılmasını engellemek için
 
-<hr>
+local function onFire(isEmpty: boolean)
+    local now = os.clock()
+    if (now - lastFireAnim) < FIRE_ANIM_COOLDOWN then return end
+    lastFireAnim = now
 
-<h2>⚠️ Important Notes</h2>
+    if anim:isPlaying("Reload") then return end   -- reload sırasında oynama
 
-<div class="box">
-<strong>Always use cloned models:</strong>
-<pre>
--- WRONG
-AnimationController.new(template)
+    local animName = isEmpty and "FireEmpty" or "Fire"
+    anim:playOnce(animName)
+    -- Not: Fire non-looped olduğu için otomatik biter, Idle ile beraber oynayabilir.
+end
 
--- CORRECT
-local clone = template:Clone()
-AnimationController.new(clone)
-</pre>
+-- ── Reload ──
+local function onReload(isEmpty: boolean)
+    if anim:isPlaying("Reload") or anim:isPlaying("ReloadEmpty") then
+        return   -- zaten reload yapılıyor
+    end
+
+    local animName = isEmpty and "ReloadEmpty" or "Reload"
+
+    -- Kilitli oynat — reload bitmeden fire animasyonu başlamasın
+    anim:playLocked(animName, nil, function()
+        anim:play("Idle")
+        -- Ammo güncelleme event'ini burada ateşleyebilirsin
+    end)
+end
+
+-- ── Koşma / Yürüme / Durma ──
+local function onMovementUpdate(speed: number)
+    if anim:isPlaying("Reload") then return end   -- reload sırasında etkileme
+
+    if speed > 14 then
+        anim:play("Run")
+    elseif speed > 1 then
+        anim:play("Walk")
+    else
+        anim:play("Idle")
+    end
+end
+
+-- ── Inspect ──
+local function onInspect()
+    if anim:isPlaying("Reload") then return end
+
+    anim:playOnce("Inspect", { speed = 0.9 }, function()
+        anim:play("Idle")
+    end)
+end
+
+-- ── Silah unequip ──
+local function onUnequip(destroyCallback: () -> ())
+    anim:stopAll()
+    anim:playOnce("Unequip", nil, function()
+        destroyCallback()   -- viewmodel'i sil
+    end)
+end</code></pre>
+    </div>
+
+    <h2><span>10.</span> Temizlik (Garbage Collection)</h2>
+    <p>Viewmodel unload olduğunda (silindiğinde) bellek sızıntısını (memory leak) önlemek için mutlaka temizlik fonksiyonu çağrılmalıdır.</p>
+    
+    <div class="callout">
+        <strong>❌ YANLIŞ:</strong> <code>anim</code> objesini temizlemeden direkt <code>viewmodelModel:Destroy()</code> yaparsan animasyon trackleri arka planda bellek sızdırır.
+    </div>
+    
+    <div class="callout success">
+        <strong>✅ DOĞRU:</strong> Önce animasyon kontrolcüsünü, sonra modeli sil.
+    </div>
+
+    <div class="code-wrapper">
+<pre><code class="language-lua">local function onViewmodelUnload()
+    anim:destroy()
+    -- viewmodelModel:Destroy() -> (Zaten viewmodel.unload() içinde yapılıyor varsayılır)
+end</code></pre>
+    </div>
+
+    <h2>Fonksiyon Özeti (API Referans)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Metot / Tip</th>
+                <th>Açıklama</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="category-row"><td colspan="2">Oluşturma</td></tr>
+            <tr>
+                <td>AnimationController.new(model)</td>
+                <td>Controller'ı başlatır. Humanoid/Animator eksikse <code>nil</code> dönebilir.</td>
+            </tr>
+            <tr class="category-row"><td colspan="2">Oynatma</td></tr>
+            <tr>
+                <td>:play(name, config?)</td>
+                <td>Looped (sürekli tekrar eden) animasyonları oynatır.</td>
+            </tr>
+            <tr>
+                <td>:playOnce(name, config?, callback?)</td>
+                <td>One-shot animasyon oynatır, bitince callback tetikler.</td>
+            </tr>
+            <tr>
+                <td>:playLocked(name, config?, callback?)</td>
+                <td>Animasyon oynarken başka bir animasyonun araya girmesini kilitler.</td>
+            </tr>
+            <tr>
+                <td>:queue(name, config?, callback?)</td>
+                <td>Mevcut kilitli animasyon bitince sıraya alınan animasyonu başlatır.</td>
+            </tr>
+            <tr class="category-row"><td colspan="2">Durdurma</td></tr>
+            <tr>
+                <td>:stop(name?, fadeTime?)</td>
+                <td>İstenilen veya halihazırda çalan animasyonu yumuşak geçişle durdurur.</td>
+            </tr>
+            <tr>
+                <td>:stopAll()</td>
+                <td>Tüm animasyonları durdurur, kuyruğu temizler, kilitleri açar.</td>
+            </tr>
+            <tr class="category-row"><td colspan="2">Ayarlar</td></tr>
+            <tr>
+                <td>:setSpeed(name, speed)</td>
+                <td>Belirtilen animasyonun oynatma hızını değiştirir.</td>
+            </tr>
+            <tr>
+                <td>:setWeight(name, weight, fade?)</td>
+                <td>Animasyonun karışım ağırlığını (blend weight) ayarlar.</td>
+            </tr>
+            <tr class="category-row"><td colspan="2">Sorgulama</td></tr>
+            <tr>
+                <td>:getCurrent()</td>
+                <td>Şu anda oynatılan ana animasyonun adını döner.</td>
+            </tr>
+            <tr>
+                <td>:getPrevious()</td>
+                <td>Bir önceki oynatılan animasyonun adını döner.</td>
+            </tr>
+            <tr>
+                <td>:isPlaying(name)</td>
+                <td>Belirtilen animasyonun şu an aktif olup olmadığını döner (boolean).</td>
+            </tr>
+            <tr>
+                <td>:getProgress(name)</td>
+                <td>Animasyonun ne kadarının tamamlandığını (0 ile 1 arası) döner.</td>
+            </tr>
+            <tr>
+                <td>:getTrack(name)</td>
+                <td>Roblox'un kendi <code>AnimationTrack</code> objesini döndürür (Event vs. için).</td>
+            </tr>
+            <tr class="category-row"><td colspan="2">Lifecycle (Yaşam Döngüsü)</td></tr>
+            <tr>
+                <td>:destroy()</td>
+                <td>Sınıfı temizler, bağlanan tüm eventleri ve yüklenen trackleri yok eder.</td>
+            </tr>
+        </tbody>
+    </table>
+
 </div>
-
-<div class="box">
-<strong>Animations won't replay if already playing</strong>
-</div>
-
-<div class="box">
-<strong>Looped animations must be stopped manually</strong>
-</div>
-
-<hr>
-
-<h2>🧹 Cleanup</h2>
-
-<pre>
-anim:destroy()
-</pre>
-
-<ul>
-<li>Stops all animations</li>
-<li>Disconnects events</li>
-<li>Prevents memory leaks</li>
-</ul>
-
-<hr>
-
-<h2>📋 API Summary</h2>
-
-<h3>Playback</h3>
-<ul>
-<li>:play()</li>
-<li>:playOnce()</li>
-<li>:playLocked()</li>
-<li>:queue()</li>
-</ul>
-
-<h3>Control</h3>
-<ul>
-<li>:stop()</li>
-<li>:stopAll()</li>
-</ul>
-
-<h3>Settings</h3>
-<ul>
-<li>:setSpeed()</li>
-<li>:setWeight()</li>
-</ul>
-
-<h3>Query</h3>
-<ul>
-<li>:getCurrent()</li>
-<li>:getPrevious()</li>
-<li>:isPlaying()</li>
-<li>:getProgress()</li>
-<li>:getTrack()</li>
-</ul>
-
-<h3>Lifecycle</h3>
-<ul>
-<li>:destroy()</li>
-</ul>
-
-<hr>
-
-<h2>🔥 Final Notes</h2>
-<p>
-This system is suitable for:
-</p>
-<ul>
-<li>FPS Viewmodels</li>
-<li>Character animations</li>
-<li>Ability systems</li>
-</ul>
-
-<p>
-Built for flexibility, performance, and clean architecture.
-</p>
 
 </body>
 </html>
