@@ -48,16 +48,20 @@ local DEFAULT_CONFIG = {
 } :: trackConfig
 
 --// Functions
+function get(v, default)
+	return v ~= nil and v or default
+end
+
 function mergeConfig(config: trackConfig?): trackConfig
 	if not config then
 		return DEFAULT_CONFIG
 	end
 
 	return {
-		fadeIn = config.fadeIn or DEFAULT_CONFIG.fadeIn,
-		fadeOut = config.fadeOut or DEFAULT_CONFIG.fadeOut,
-		speed = config.speed or DEFAULT_CONFIG.speed,
-		looped = config.looped,
+		fadeIn = get(config.fadeIn, DEFAULT_CONFIG.fadeIn),
+		fadeOut = get(config.fadeOut, DEFAULT_CONFIG.fadeOut),
+		speed = get(config.speed, DEFAULT_CONFIG.speed),
+		looped = get(config.looped, DEFAULT_CONFIG.looped),
 		priority = config.priority,
 	}
 end
@@ -68,19 +72,19 @@ animationController.__index = animationController :: any
 
 --// Lib Functions
 function animationController.new(model: Model): animationControllerType
-	local humanoid = model:FindFirstChildOfClass("Humanoid")
+	local humanoid = model:WaitForChild("Humanoid")
 	if not humanoid then
 		return nil :: any
 	end
 
-	local animator = humanoid:FindFirstChildOfClass("Animator")
+	local animator = humanoid:WaitForChild("Animator")
 	if not animator then
 		animator = Instance.new("Animator")
 		animator.Parent = humanoid
 	end
 
 	local tracks = {} :: { [string]: AnimationTrack }
-	local animFolder = model:FindFirstChild("Animations")
+	local animFolder = model:WaitForChild("Animations") :: Folder
 
 	if animFolder then
 		for _, child in animFolder:GetChildren() do
@@ -94,6 +98,8 @@ function animationController.new(model: Model): animationControllerType
 		end
 	end
 
+	print(tracks)
+
 	local self = setmetatable({
 		_animator = animator :: Animator,
 		_tracks = tracks,
@@ -104,6 +110,8 @@ function animationController.new(model: Model): animationControllerType
 		_isLocked = false,
 		_connections = {} :: { RBXScriptConnection },
 	}, animationController)
+
+	print(self._tracks)
 
 	return self :: any
 end
@@ -122,7 +130,7 @@ end
 
 function animationController:isPlaying(name: animName): boolean
 	local track = self._tracks[name]
-	return track ~= nil and track.isPlaying
+	return track ~= nil and track.IsPlaying
 end
 
 function animationController:getProgress(name: animName): number
@@ -141,6 +149,8 @@ function animationController:getProgress(name: animName): number
 end
 
 function animationController:_applyTrackSettings(track: AnimationTrack, config: trackConfig)
+	print(config)
+
 	track:AdjustSpeed(config.speed)
 
 	if config.looped ~= nil then
@@ -188,10 +198,12 @@ function animationController:play(name: animName, config: trackConfig?): Animati
 
 	local track = self._tracks[name]
 	if not track then
+		print("Track cannot be founded")
 		return nil :: any
 	end
 
 	if track.IsPlaying then
+		print("Cannot play becouse an animation is already playing.")
 		return track
 	end
 
@@ -199,6 +211,7 @@ function animationController:play(name: animName, config: trackConfig?): Animati
 	self:_applyTrackSettings(track, cfg)
 
 	if self._current and self._current ~= name then
+		print("A?")
 		local prev = self._tracks[self._current]
 
 		if prev and prev.IsPlaying and prev.Looped then
@@ -206,6 +219,7 @@ function animationController:play(name: animName, config: trackConfig?): Animati
 		end
 	end
 
+	print("Playing: " .. track.Name)
 	track:Play(cfg.fadeIn)
 	self._previous = self._current
 	self._current = name
