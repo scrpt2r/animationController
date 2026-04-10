@@ -1,3 +1,24 @@
+--[[
+	******************************************************************************
+	* @file		: .../src/libs/XMLParser.lua
+	* @author	: Scrpt2r
+	* @date		: April 09 2026
+	* @lastEdit	: April 10 2026 16:17
+	* @brief	: Animation controller for any model / character.
+	* @version	: 0.2.5
+	******************************************************************************
+	* @attention
+	*
+	* Copyright © 2026 Axon Corporation.
+	* All rights reserved.
+	*
+	* This software is licensed under terms that can be found in the LICENSE file
+	* in the root directory of this software component.
+	* If no LICENSE file comes with this software, it is provided AS-IS.
+	*
+	******************************************************************************
+--]]
+
 --// Libs
 local types = require(script.Parent.global.types)
 
@@ -149,12 +170,19 @@ function animationController:_processQueue()
 	end
 
 	local next = table.remove(self._queue, 1)
-	self:playOnce(next.name, next.config, next.callback)
+
+	if next.actionType == "play" then
+		self:play(next.name, next.config)
+	elseif next.actionType == "playLocked" then
+		self:playLocked(next.name, next.config, next.callback)
+	else
+		self:playOnce(next.name, next.config, next.callback)
+	end
 end
 
 function animationController:play(name: animName, config: trackConfig?): AnimationTrack?
 	if self._isLocked then
-		table.insert(self._queue, { name = name, config = config })
+		table.insert(self._queue, { name = name, config = config, actionType = "play" })
 		return nil :: any
 	end
 
@@ -246,6 +274,7 @@ function animationController:queue(name: animName, config: trackConfig?, callbac
 		name = name,
 		config = config,
 		callback = callback,
+		actionType = "playOnce",
 	})
 
 	self:_processQueue()

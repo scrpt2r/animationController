@@ -16,6 +16,7 @@ export type queueEntry = {
 	name: string,
 	config: trackConfig?,
 	callback: (() -> ())?,
+	actionType: string?,
 }
 
 export type animationControllerType = {
