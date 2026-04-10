@@ -3,9 +3,9 @@
 	* @file		: .../src/libs/constructor.lua
 	* @author	: Scrpt2r
 	* @date		: April 09 2026
-	* @lastEdit	: April 11 2026 02:45
+	* @lastEdit	: April 11 2026 02:52
 	* @brief	: Animation controller for any model / character.
-	* @version	: 0.6.5
+	* @version	: 0.6.6
 	******************************************************************************
 	* @attention
 	*
@@ -243,7 +243,7 @@ function animationController:playOnce(name: animName, config: trackConfig?, call
 		conn:Disconnect()
 
 		if self._current == name then
-			self._current = nil
+			self._current = self._previous
 		end
 
 		if callback then
