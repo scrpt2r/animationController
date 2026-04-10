@@ -3,9 +3,9 @@
 	* @file		: .../src/libs/constructor.lua
 	* @author	: Scrpt2r
 	* @date		: April 09 2026
-	* @lastEdit	: April 10 2026 23:51
+	* @lastEdit	: April 11 2026 00:12
 	* @brief	: Animation controller for any model / character.
-	* @version	: 0.5.2
+	* @version	: 0.5.5
 	******************************************************************************
 	* @attention
 	*
@@ -48,21 +48,17 @@ local DEFAULT_CONFIG = {
 } :: trackConfig
 
 --// Functions
-function get(v, default)
-	return v ~= nil and v or default
-end
-
 function mergeConfig(config: trackConfig?): trackConfig
 	if not config then
-		return table.clone(DEFAULT_CONFIG)
+		return DEFAULT_CONFIG
 	end
 
 	return {
-		fadeIn = get(config.fadeIn, DEFAULT_CONFIG.fadeIn),
-		fadeOut = get(config.fadeOut, DEFAULT_CONFIG.fadeOut),
-		speed = get(config.speed, DEFAULT_CONFIG.speed),
-		looped = get(config.looped, DEFAULT_CONFIG.looped),
-		priority = config.priority,
+		fadeIn = config.fadeIn or DEFAULT_CONFIG.fadeIn,
+		fadeOut = config.fadeOut or DEFAULT_CONFIG.fadeOut,
+		speed = config.speed or DEFAULT_CONFIG.speed,
+		looped = if config.looped ~= nil then config.looped else DEFAULT_CONFIG.looped,
+		priority = config.priority or DEFAULT_CONFIG.priority,
 	}
 end
 
@@ -98,8 +94,6 @@ function animationController.new(model: Model): animationControllerType
 		end
 	end
 
-	print(tracks)
-
 	local self = setmetatable({
 		_animator = animator :: Animator,
 		_tracks = tracks,
@@ -110,8 +104,6 @@ function animationController.new(model: Model): animationControllerType
 		_isLocked = false,
 		_connections = {} :: { RBXScriptConnection },
 	}, animationController)
-
-	print(self._tracks)
 
 	return self :: any
 end
@@ -149,8 +141,6 @@ function animationController:getProgress(name: animName): number
 end
 
 function animationController:_applyTrackSettings(track: AnimationTrack, config: trackConfig)
-	print(config)
-
 	track:AdjustSpeed(config.speed)
 
 	if config.looped ~= nil then
@@ -211,7 +201,6 @@ function animationController:play(name: animName, config: trackConfig?): Animati
 	self:_applyTrackSettings(track, cfg)
 
 	if self._current and self._current ~= name then
-		print("A?")
 		local prev = self._tracks[self._current]
 
 		if prev and prev.IsPlaying and prev.Looped then
@@ -219,7 +208,6 @@ function animationController:play(name: animName, config: trackConfig?): Animati
 		end
 	end
 
-	print("Playing: " .. track.Name)
 	track:Play(cfg.fadeIn)
 	self._previous = self._current
 	self._current = name
@@ -236,7 +224,7 @@ function animationController:playOnce(name: animName, config: trackConfig?, call
 	local cfg = mergeConfig(config)
 	cfg.looped = false
 
-	self._applyTrackSettings(track, cfg)
+	self:_applyTrackSettings(track, cfg)
 
 	if self._current and self._current ~= name then
 		local prev = self._tracks[self._current]
