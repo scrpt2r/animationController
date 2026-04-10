@@ -3,9 +3,9 @@
 	* @file		: .../src/libs/constructor.lua
 	* @author	: Scrpt2r
 	* @date		: April 09 2026
-	* @lastEdit	: April 11 2026 00:12
+	* @lastEdit	: April 11 2026 02:45
 	* @brief	: Animation controller for any model / character.
-	* @version	: 0.5.5
+	* @version	: 0.6.5
 	******************************************************************************
 	* @attention
 	*
@@ -44,7 +44,7 @@ local DEFAULT_CONFIG = {
 	fadeOut = 0.15,
 	speed = 1,
 	looped = false,
-	priority = nil,
+	priority = "Action",
 } :: trackConfig
 
 --// Functions
@@ -182,7 +182,7 @@ end
 
 function animationController:play(name: animName, config: trackConfig?): AnimationTrack?
 	if self._isLocked then
-		table.insert(self._queue, { name = name, config = config, actionType = "play" })
+		table.insert(self._queue, { name = name, config = config, actionType = "playOnce" })
 		return nil :: any
 	end
 
@@ -243,7 +243,7 @@ function animationController:playOnce(name: animName, config: trackConfig?, call
 		conn:Disconnect()
 
 		if self._current == name then
-			self._current = self._previous
+			self._current = nil
 		end
 
 		if callback then
