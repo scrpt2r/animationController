@@ -3,9 +3,9 @@
 	* @file		: .../src/libs/constructor.lua
 	* @author	: Scrpt2r
 	* @date		: April 09 2026
-	* @lastEdit	: April 10 2026 16:17
+	* @lastEdit	: April 10 2026 23:49
 	* @brief	: Animation controller for any model / character.
-	* @version	: 0.2.7
+	* @version	: 0.5.1
 	******************************************************************************
 	* @attention
 	*
