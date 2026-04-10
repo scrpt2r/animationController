@@ -3,9 +3,9 @@
 	* @file		: .../src/libs/constructor.lua
 	* @author	: Scrpt2r
 	* @date		: April 09 2026
-	* @lastEdit	: April 10 2026 23:49
+	* @lastEdit	: April 10 2026 23:51
 	* @brief	: Animation controller for any model / character.
-	* @version	: 0.5.1
+	* @version	: 0.5.2
 	******************************************************************************
 	* @attention
 	*
@@ -54,7 +54,7 @@ end
 
 function mergeConfig(config: trackConfig?): trackConfig
 	if not config then
-		return DEFAULT_CONFIG
+		return table.clone(DEFAULT_CONFIG)
 	end
 
 	return {
