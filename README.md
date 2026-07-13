@@ -1,21 +1,21 @@
 ---
 
-## ✨ Features
+## Features
 
-- 🎬 Supports both **looped** and **one-shot** animations  
-- 🔒 `playLocked` system to prevent interruptions (e.g. Reload)  
-- ⏳ Built-in **queue system** for chaining animations  
-- ⚡ Real-time control with `setSpeed` and `setWeight`  
-- 🧩 Callback support when animations finish  
-- 🛠️ Fully compatible with **Rojo workflows**  
-- 🧹 Safe `destroy()` method to prevent memory leaks  
-- 🎯 Designed for **FPS systems, characters, and ability systems**
+- Supports both **looped** and **one-shot** animations  
+- `playLocked` system to prevent interruptions (e.g. Reload)  
+- Built-in **queue system** for chaining animations  
+- Real-time control with `setSpeed` and `setWeight`  
+- Callback support when animations finish  
+- Fully compatible with **Rojo workflows**  
+- Safe `destroy()` method to prevent memory leaks  
+- Designed for **FPS systems, characters, and ability systems**
 
 ---
 
-## 🚀 Setup
+## Setup
 
-### 1️⃣ Install Module
+### Install Module
 
 Place the module inside your project:
 ```text
@@ -28,7 +28,7 @@ ReplicatedStorage
 ```
 ---
 
-### 2️⃣ Model Requirements
+### Model Requirements
 
 - Your model must follow this structure:
 ```text
@@ -43,14 +43,14 @@ Viewmodel / Character (Model)
 
 ```
 
-> ⚠️ **Important**
+> **Important**
 > - Animations must be `Animation` instances  
 > - Each must have a valid `AnimationId`  
 > - Animator is created automatically  
 
 ---
 
-## 🧠 How It Works
+## How It Works
 
 - The system scans the `Animations` folder inside the model  
 - All animations are loaded using `Animator:LoadAnimation()`  
@@ -63,9 +63,9 @@ Viewmodel / Character (Model)
 
 ---
 
-## 📦 Usage
+## Usage
 
-### 1️⃣ Create Controller
+### Create Controller
 
 ```luau
 local AnimationController = require(
@@ -82,7 +82,7 @@ end
 
 ---
 
-### 2️⃣ Basic Playback (Looped)
+### Basic Playback (Looped)
 
 ```luau
 anim:play("Idle")
@@ -95,7 +95,7 @@ anim:play("Walk", {
 ```
 ---
 
-### 3️⃣ One-Shot & Callback
+### One-Shot & Callback
 
 ```luau
 anim:playOnce("Fire")
@@ -107,7 +107,7 @@ anim:playOnce("Equip", nil, function()
 end)
 ```
 
-### 4️⃣ Locked Playback & Queue
+### Locked Playback & Queue
 
 ```luau
 anim:playLocked("Reload", nil, function()
@@ -121,7 +121,7 @@ anim:queue("Fire")
 ```
 ---
 
-### 🧩 API Reference
+### API Reference
 
 - `AnimationController.new(model: Model)`
 - Creates a new controller instance.
@@ -178,9 +178,9 @@ anim:queue("Fire")
 
 ---
 
-## 🛡️ Best Practices
+## Best Practices
 
-### 🔄 Queue System Flow
+### Queue System Flow
 
 ```text
 [PlayLocked: Reload]
@@ -199,7 +199,7 @@ anim:queue("Fire")
 
 ---
 
-### 🗑️ Destroy Properly
+### Destroy Properly
 
 ```luau
 anim:destroy()
@@ -208,7 +208,7 @@ anim:destroy()
 
 ---
 
-### ⏱️ Use Cooldowns
+### Use Cooldowns
 
 - Prevent animation spam:
 
@@ -220,7 +220,7 @@ end
 
 ---
 
-### 🏷️ Naming Convention
+### Naming Convention
 
 - Use clean animation names:
 
@@ -235,22 +235,22 @@ Inspect
 
 ---
 
-### 🔥 Critical Note
+### Critical Note
 
 - ❗ Always create the controller using the **GONNABE USED / CLONED** model, not the template.
 
 ```luau
--- ❌ Wrong
+-- Wrong
 AnimationController.new(template)
 
--- ✅ Correct
+-- Correct
 local clone = template:Clone()
 AnimationController.new(clone)
 ```
 
 ---
 
-### 🤝 Contributing
+### Contributing
 
 - Pull requests and issues are welcome.
 - For major changes, please open an issue first.
